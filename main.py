@@ -24,12 +24,12 @@ delta = { 'I' : {'AS' : 's1', 'AI' : 'i1'}, # caso o aluno comece com um aquecim
           's5' : {'ES6' : 'F', 'AI': 'i1'}, # estando no estado de treino s5, o aluno pode escolher ou fazer o ES6 e finalizar seu treino, ou fazer um aquecimento de membros inferiores e fazer um treino de membros inferiores
           'i1' : {'EI1' : 'i2', 'EI2' : 'i2', 'AS': 'm1'}, # o aluno pode escolher como primeiro exercícios de membros inferiores EI1 ou EI2, ou pode escolher fazer um aqucimento de membros superiores também, para partir para um treino misto
           'i2' : {'EI3' : 'i3'}, # estando no estado de treino i2, o aluno deve, obrigatoriamente, fazer EI3 para progredir
-          'i3' : {'EI4' : 'i4', 'EI5': 'i3'}, # estando no estado de treino i3, o aluno pode escolher fazer EI4 para progredir, ou pode optar por fazer EI5 e voltar a um estado de treino anterior pare refazer exercícios
+          'i3' : {'EI4' : 'i4', 'EI5': 'i4'}, # estando no estado de treino i3, o aluno pode escolher fazer EI4 para progredir, ou pode optar por fazer EI5 e voltar a um estado de treino anterior pare refazer exercícios
           'i4' : {'EI6' : 'i5'}, # estando no estado de treino i4, o aluno deve, obrigatoriamente, fazer EI6 para progredir
           'i5' : {'EI7' : 'F', 'AS': 's1'}, # estando no estado de treino i5, o aluno pode escolher ou fazer o EI7 e finalizar seu treino, ou fazer um aquecimento de membros inferiores e fazer um treino de membros inferiores
           'm1' : {'ES1': 'm2', 'EI1': 'm2'}, # em um treino misto, estando no estado m1, o aluno pode escolher fazer tanto exercícios de membros superiores ES1 ou de membros inferiores EI1 para progredir
-          'm2' : {'ES2': 'm3', 'EI3': 'm3'}, # em um treino misto, estando no estado m2, o aluno pode escolher fazer tanto exercícios de membros superiores ES2 ou de membros inferiores EI2 para progredir
-          'm3' : {'ES3': 'm4', 'EI4': 'm4'}, # em um treino misto, estando no estado m3, o aluno pode escolher fazer tanto exercícios de membros superiores ES3 ou de membros inferiores EI3 para progredir
+          'm2' : {'ES2': 'm3', 'EI2': 'm3'}, # em um treino misto, estando no estado m2, o aluno pode escolher fazer tanto exercícios de membros superiores ES2 ou de membros inferiores EI2 para progredir
+          'm3' : {'ES3': 'm4', 'EI3': 'm4'}, # em um treino misto, estando no estado m3, o aluno pode escolher fazer tanto exercícios de membros superiores ES3 ou de membros inferiores EI3 para progredir
           'm4' : {'ES4': 'm5'}, # em um treino misto, estando no estado m4, o aluno deve fazer ES4 para progredir
           'm5' : {'EI4': 'm6', }, # em um treino misto, estando no estado m5, o aluno deve fazer EI4 para progredir
           'm6' : {'ES5': 'F', 'EI5': 'F', 'AS': 's1', 'AI': 'i1'}, # em um treino misto, estando no estado m6, pode escolher entre fazer ES5 ou EI5 para progredir e finalizar seu treino, ou fazer aquecimentos AS ou AI para realizar, também, os treinos correspondentes
@@ -49,3 +49,12 @@ automata.view(
     node_attr={'fontsize': '20'},
     edge_attr={'fontsize': '20pt'}
 )
+
+print(automata.accept(['AS','ES1', 'ES3', 'ES4', 'ES5', 'ES6'])) # representa um treino de membro superiores, corretamente reconhecido pelo autômato
+print(automata.accept(['AS','ES2', 'ES4', 'ES5', 'ES6'])) # representa um treino de membro superiores, em que o aluno escolheu outro exercícios inicial, corretamente reconhecido pelo autômato
+print(automata.accept(['AS','ES1', 'ES3', 'ES4', 'ES5'])) # representa um treino incompleto de membro superiores, em que o aluno não completou o último exercício, e o treino é rejeitado pelo autômato, como esperado
+print(automata.accept(['AI','EI1', 'EI3', 'EI4', 'EI6', 'EI7'])) # representa um treino completo de membros inferiores, corretamente reconhecido pelo autômato
+print(automata.accept(['EI1', 'EI3', 'EI4', 'EI6', 'EI7'])) # representa um treino que seria completo de membro inferiores, porém o aluno não realizou aquecimento, portanto configurando um treino incorreto, é rejeitado pelo autômato, como esperado
+print(automata.accept(['AS','ES1', 'ES3', 'ES4', 'ES5', 'AI','EI1', 'EI3', 'EI4', 'EI6', 'EI7'])) # representa um treino em que o aluno realizou corretamente primeiro um treino de membros superiores completo, e depois um de inferiores completo, e a palavra é corretamente reconhecida pelo autômato
+print(automata.accept(['AS', 'AI', 'ES1', 'EI2', 'ES3', 'ES4', 'EI4', 'EI5'])) # representa um treino misto completo realizado pelo aluno, corretamente reconhecido pelo autômato
+print(automata.accept(['AS', 'AI', 'ES2', 'EI1', 'ES3', 'EI4', 'ES4', 'EI5'])) # representa um treino misto em que o aluno inverteu a ordem de alguns exercícios, portanto configurando um treino incorreto, que é rejeitado pelo autômato, como esperado
